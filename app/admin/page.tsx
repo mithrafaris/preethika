@@ -16,7 +16,7 @@ export default async function AdminPage() {
   const rawUsers = await User.find({ isadmin: false }).select('name email wallet isBlock').lean();
   const rawProducts = await Product.find({}).populate('category').lean();
   const rawOrders = await Order.find({}).populate({ path: 'user', model: User, select: 'name' }).lean();
-  const rawCategories = await Category.find({}).select('categoryName').lean();
+  const rawCategories = await Category.find({}).select('categoryName description image').lean();
   const rawCoupons = await Coupon.find({}).lean();
   const rawBanners = await Banner.find({}).lean();
 
@@ -55,6 +55,8 @@ export default async function AdminPage() {
   const categories = rawCategories.map((c: any) => ({
     _id: c._id.toString(),
     categoryName: c.categoryName,
+    description: c.description,
+    image: c.image,
   }));
 
   const coupons = rawCoupons.map((c: any) => ({
