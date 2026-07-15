@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const path = require('path');
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/Preethika';
+const bcrypt = require('bcryptjs');
 
 // Inline simple schemas for seed
 const CategorySchema = new mongoose.Schema({
@@ -30,9 +31,17 @@ const bannerSchema = new mongoose.Schema({
   isList: { type: Boolean, default: true }
 });
 
+const userSchema = new mongoose.Schema({
+  name: { type: String },
+  email: { type: String, required: true },
+  password: { type: String },
+  isadmin: { type: Boolean, default: false },
+});
+
 const Category = mongoose.models.Category || mongoose.model('Category', CategorySchema);
 const Products = mongoose.models.Products || mongoose.model("Products", productSchema);
 const Banner = mongoose.models.Banner || mongoose.model('Banner', bannerSchema);
+const User = mongoose.models.user_details || mongoose.model('user_details', userSchema);
 
 async function seed() {
   try {
@@ -42,6 +51,22 @@ async function seed() {
     await Category.deleteMany({});
     await Products.deleteMany({});
     await Banner.deleteMany({});
+
+    const adminExists = await User.findOne({ email: 'admin@preethika.com' });
+    if (!adminExists) {
+      console.log('Inserting Admin User...');
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('Admin@123', salt);
+      await User.create({
+        name: 'Super Admin',
+        email: 'admin@preethika.com',
+        password: hashedPassword,
+        isadmin: true
+      });
+      console.log('Admin user created (admin@preethika.com / Admin@123).');
+    } else {
+      console.log('Admin user already exists.');
+    }
 
     console.log('Inserting Categories...');
     const categoriesData = [
