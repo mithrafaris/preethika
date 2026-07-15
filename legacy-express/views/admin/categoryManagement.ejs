@@ -1,0 +1,132 @@
+<%- include('../include/admin_header', { title: 'Flybees' }) %>
+<%- include('../include/adminNAV') %>
+      <!--End sidebar-wrapper-->
+
+      <!--Start topbar header-->
+      <header class="topbar-nav">
+        <nav class="navbar navbar-expand fixed-top">
+          <ul class="navbar-nav mr-auto align-items-center">
+            <li class="nav-item">
+              <a class="nav-link toggle-menu" href="">
+                <i class="icon-menu menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <form action="/admin/category/search" method="post"     class="search-bar">
+                <input type="text" class="form-control" placeholder="Enter keywords">
+                <a href=""><i class="icon-magnifier"></i></a>
+              </form>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav align-items-center right-nav-link">
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
+                <span class="user-profile"><img src="data:image/png;base64,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" class="img-circle" alt="user avatar"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li  style="background-color: transparent;"   class="dropdown-item"><a href="/admin/category/addCategory">Add Category</a></li>
+              </ul>
+            </li>
+          </ul>
+          
+            </li>
+          </ul>
+        </nav>
+      </header>
+<!--End topbar header-->
+
+<div class="clearfix"></div>
+	
+  <div class="content-wrapper">
+    <div class="container-fluid">
+     
+      <div class="row mt-6">
+        <div class="col-lg-12">
+          <div class="card">
+            
+            
+            </div>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Category</h5>
+			  <div class="table-responsive">
+               <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">categoryName</th>
+                      <th scope="col">image</th>
+                     
+                      <th scope="col">IsAvailable</th>
+                      <th scope="col">isList</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% categories.forEach((check) => { %>
+                      <tr>
+                        <td style="text-transform: capitalize;"> <%= check.categoryName %></td>
+                          <td> <img src="/uploads/<%= check.image %>" alt="<%= check.categoryName %>" style="width: 80px;height: 80px;"></td>
+                          <td> <%= check.quantity %></td>
+                         <td>
+              <div class="row">
+                <div class="col-md-6">
+                  <a href="/admin/category/edit?id=<%= check._id %>" class="btn btn-success btn-block">Edit</a>
+                </div>
+                <div class="col-md-6">
+                  <a href="/admin/category/delete?id=<%= check._id %>" class="btn btn-danger btn-block">Delete</a>
+                </div>
+              </div>
+            </td>
+            
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+                <div class="align-items-center mt-2" id="pagination">
+                  <nav aria-label="Page navigation example" style="width: 30%; margin: auto;">
+                      <p class="text-center">Page <%= currentPage %> of <%= totalPages %></p>
+                      <ul class="pagination justify-content-center">
+                          <% if (currentPage > 1) { %>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=1">First</a>
+                              </li>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                              </li>
+                          <% } %>
+                          <% if (currentPage < totalPages) { %>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                              </li>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= totalPages %>">Last</a>
+                              </li>
+                          <% } %>
+                      </ul>
+                  </nav>
+              </div>
+              </div>
+	  
+	
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+	
+  <!-- simplebar js -->
+  <script src="/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+  
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+	
+</body>
+</html>

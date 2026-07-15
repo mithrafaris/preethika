@@ -1,0 +1,77 @@
+<%- include('../include/login-header'{ title: 'Flybees' }) %>
+    <link rel="stylesheet" type="text/css" href="/css/outer.css">
+    <link rel="icon" type="image/png" href="/images/icons/favicon.png" />
+    <div class="row">
+        <div class="col-md-6 mx-auto p-0">
+            <div class="card">
+                <div class="login-box">
+                    <div class="row">
+                        <div class="login-snip">
+                            <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+                            <label for="tab-1" class="tab">signup</label>
+                            <input id="tab-2" type="radio" name="tab" class="sign-up">
+                            <label for="tab-2" class="tab"></label>
+                            <div class="login-space">
+                                <div class="login">
+                                    <form action="" method="post" >
+                                        <div class="group">
+                                            <label for="signup-user" class="label">Username</label>
+                                            <input id="signup-user" name="name" type="name" class="input"
+                                                placeholder="Enter your Username">
+                                        </div>
+                                        <div class="group">
+                                            <label for="signup-email" class="label">Useremail</label>
+                                            <input id="signup-email" name="email" type="email" class="input"
+                                                placeholder="Create your Useremail">
+                                        </div>
+                                        <div class="group">
+                                            <label for="signup-pass" class="label">Password</label>
+                                            <input id="signup-pass" name="password" type="password" class="input"
+                                                data-type="password"
+                                                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                                                required placeholder="Create your password">
+                                        </div>
+                                        <div class="group">
+                                            <label for="repeat-pass" class="label">Repeat Password</label>
+                                            <input id="repeat-pass" name="repeatPassword" type="password" class="input"
+                                                data-type="password"
+                                                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                                                required placeholder="Repeat your password">
+                                        </div>
+                                        
+                                        <div class="group">
+                                            <label for="number" class="label">Phone Number</label>
+                                            <input id="number" name="mobile" type="text" class="input"
+                                                placeholder="Enter your phone number">
+                                        </div>
+                                        <div class="group">
+                                            <input type="submit" class="button" value="Sign Up">
+                                            <div class="foot">
+                                                <a href="/user_login">Already Member?</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- End Sign Up Form -->
+                                    <div class="hr"></div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="sign-up-form">
+                                <!-- Sign Up Form -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    </body>
+    </html>
+    <%- include('../include/login-footer') %>
+
+
+       

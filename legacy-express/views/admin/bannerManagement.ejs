@@ -1,0 +1,124 @@
+<%- include('../include/admin_header', { title: 'Flybees' }) %>
+<%- include('../include/adminNAV') %>
+
+      <!--Start topbar header-->
+      <header class="topbar-nav">
+        <nav class="navbar navbar-expand fixed-top">
+          <ul class="navbar-nav mr-auto align-items-center">
+            <li class="nav-item">
+              <a class="nav-link toggle-menu" href="">
+                <i class="icon-menu menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <form action=" /admin/banner/search"method="post"class="search-bar">
+                <input type="text" class="form-control" placeholder="Enter keywords">
+                <a href="javascript:void();"><i class="icon-magnifier"></i></a>
+              </form>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav align-items-center right-nav-link">
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
+                <span class="user-profile"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw9yoMEjJU5yzyEpTlu3_J4-0sanNPKywpWiggk_cKQ4LsSEZnI58tSYJoMu_fMag7EgY&usqp=CAU" class="img-circle" alt="user avatar"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li  style="background-color: transparent;"   class="dropdown-item"><a href="/admin/banner/addBanner">Add Banner</a></li>
+              </ul>
+            </li>
+          </ul>
+          
+            </li>
+          </ul>
+        </nav>
+      </header>
+<!--End topbar header-->
+
+<div class="clearfix"></div>
+	
+  <div class="content-wrapper">
+    <div class="container-fluid">
+     
+      <div class="row mt-6">
+        <div class="col-lg-12">
+          <div class="card">
+            
+            
+            </div>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">banner</h5>
+			  <div class="table-responsive">
+               <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Banner Name</th>
+                      <th scope="col">Image</th>
+                     
+                      <th scope="col">Title</th>
+                      <th scope="col">Subtitle</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                        <% banner.forEach(item => { %>
+                        <tr>
+                            <td class="text-capitalize"><%= item.bannerName %></td>
+                            <td><img src="/uploads/<%= item.image %>" alt="<%= item.bannerName %>" style="width: 80px;height: 80px;"></td>
+                            <td><%= item.title %></td>
+                            <td><%= item.subtitle %></td>
+                            <td>
+                                <a href="/admin/banner/delete?id=<%= item._id %>" class="btn btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                        <% }) %>
+            </tbody>
+                </table>
+                <div class="align-items-center mt-2" id="pagination">
+                  <nav aria-label="Page navigation example" style="width: 30%; margin: auto;">
+                      <p class="text-center">Page <%= currentPage %> of <%= totalPages %></p>
+                      <ul class="pagination justify-content-center">
+                          <% if (currentPage > 1) { %>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=1">First</a>
+                              </li>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                              </li>
+                          <% } %>
+                          <% if (currentPage < totalPages) { %>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                              </li>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= totalPages %>">Last</a>
+                              </li>
+                          <% } %>
+                      </ul>
+                  </nav>
+              </div>
+              </div>
+	  
+	
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+	
+  <!-- simplebar js -->
+  <script src="/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+  
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+	
+</body>
+</html>

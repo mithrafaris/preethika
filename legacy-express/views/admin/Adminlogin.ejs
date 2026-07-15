@@ -1,0 +1,140 @@
+<%- include('../include/admin_header') %>
+<body class="bg-theme bg-theme1">
+<!-- start loader -->
+   <div id="pageloader-overlay" class="visible incoming"><div class="loader-wrapper-outer"><div class="loader-wrapper-inner" ><div class="loader"></div></div></div></div>
+   <!-- end loader -->
+<!-- Start wrapper-->
+ <div id="wrapper">
+<div class="loader-wrapper"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
+	<div class="card card-authentication1 mx-auto my-5">
+		<div class="card-body">
+		 <div class="card-content p-2">
+		 	<div class="text-center">
+		 		<img src="/images/logo-icon.png" alt="logo icon">
+		 	</div>
+		  <div class="card-title text-uppercase text-center py-3">Login</div>
+		   
+      <form class="container" action="/admin/Adminlogin" method="post" onsubmit="">
+        <p><%=locals.error%></p>
+			  <div class="form-group">
+			  <label for="email" class="sr-only">Email</label>
+			   <div class="position-relative has-icon-right">
+				  <input type="email" id="email" name="name" class="form-control input-shadow" placeholder="Email" onchange="emailValidate()">
+				  <div class="form-control-position">
+					  <i class="icon-user"></i>
+				  </div>
+			   </div>
+			   <span id="Email" class="text-danger"></span>
+			  </div>
+			  <div class="form-group">
+			  <label for="Password" class="sr-only">Password</label>
+			   <div class="position-relative has-icon-right">
+				  <input type="password" name="password" id="Password" class="form-control input-shadow" placeholder="Enter Password" onchange="passwordValidate()">
+				  <div class="form-control-position">
+					  <i class="icon-lock"></i>
+				  </div>
+			   </div>
+			   <span id="PasswordError" class="text-danger"></span>
+			  </div>
+			<div class="form-row">
+			 <div class="form-group col-6">
+			   <div class="icheck-material-white">
+                <input type="checkbox" id="user-checkbox" checked="" />
+                <label for="user-checkbox">Remember me</label>
+			  </div>
+			 </div>
+			</div>
+			<button type="submit" class="btn btn-light btn-block">Sign In</button>
+			 
+			 </form>
+		   </div>
+		  </div>
+    
+     <!--Start Back To Top Button-->
+    <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    <!--End Back To Top Button-->
+	
+	<!--start color switcher-->
+   <div class="right-sidebar">
+    <div class="switcher-icon">
+      <i class="zmdi zmdi-settings zmdi-hc-spin"></i>
+    </div>
+    <div class="right-sidebar-content">
+
+      <p class="mb-0">Gaussion Texture</p>
+      <hr>
+      
+      <ul class="switcher">
+        <li id="theme1"></li>
+        <li id="theme2"></li>
+        <li id="theme3"></li>
+        <li id="theme4"></li>
+        <li id="theme5"></li>
+        <li id="theme6"></li>
+      </ul>
+
+      <p class="mb-0">Gradient Background</p>
+      <hr>
+      
+      <ul class="switcher">
+        <li id="theme7"></li>
+        <li id="theme8"></li>
+        <li id="theme9"></li>
+        <li id="theme10"></li>
+        <li id="theme11"></li>
+        <li id="theme12"></li>
+		<li id="theme13"></li>
+        <li id="theme14"></li>
+        <li id="theme15"></li>
+      </ul>
+      
+     </div>
+   </div>
+  <!--end color switcher-->
+	
+	</div><!--wrapper-->
+  <%- include('../include/admin_footer') %>
+  <!-- Bootstrap core JavaScript-->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+	
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+  
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+  <!-- <script>
+     function emailValidate(){
+           let emailId=document.getElementById("email").value;
+            if(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(emailId)==false){
+              document.getElementById("Email").innerHTML="Please enter valid email ";
+              return false;
+            }else{
+              document.getElementById("Email").innerHTML="";
+              return true;
+            }
+          }
+          function passwordValidate(){
+            let password=document.getElementById("Password").value;
+            if(password.length < 8){
+              document.getElementById("PasswordError").innerHTML="Please enter a valid password (at least 8 characters)";
+              return false;
+            }else{
+              document.getElementById("PasswordError").innerHTML="";
+              return true;
+            }
+          }
+          function allChecking(){
+            if(emailValidate()&&passwordValidate()){
+              return true
+            }else{
+              return false
+            }
+          }
+        
+  </script> -->
+
+  
+
+

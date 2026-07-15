@@ -1,0 +1,120 @@
+<%- include('../include/header', { title: 'Flybees' }) %> <%-
+include('../include/profileNav',{ title: 'Flybees' }) -%>
+<!-- Product -->
+
+<section class="bg0 p-t-23 p-b-140 mt-5">
+  <div class="container">
+    <div class="p-b-10">
+      <h4 class="mt-5">Product Overview</h4>
+    </div>
+
+    <div class="flex-w flex-sb-m p-b-52">
+      <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+        <button
+          class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1 catbtn"
+          data-catname="all"
+        >
+          All Products
+        </button>
+        <% categories.forEach(item=>{%>
+        <button
+          class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 text-capitalize catbtn"
+          data-catname="<%=item.categoryName %>"
+        >
+          <%=item.categoryName %>
+        </button>
+        <% }) %>
+      </div>
+
+      <div class="flex-w flex-c-m m-tb-10">
+        <div
+          class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search"
+        >
+          <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+          <i
+            class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"
+          ></i>
+          Search
+        </div>
+      </div>
+
+      <!-- Search product -->
+      <div class="dis-none panel-search w-full p-t-10 p-b-15">
+        <div class="bor8 dis-flex p-l-15">
+          <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+            <i class="zmdi zmdi-search"></i>
+          </button>
+
+          <input
+            class="mtext-107 cl2 size-114 plh2 p-r-15"
+            type="text"
+            name="search-product"
+            placeholder="Search"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT -->
+
+    <div class="row isotope-grid">
+      <% products.forEach(function(pdt, index) { %>
+      <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+        <!-- Block2 -->
+        <div class="block2">
+          <div class="block2-pic hov-img0">
+            <a
+              href="/product-detail?id=<%= pdt._id %>"
+              class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+            >
+              <img
+                style="width: 300px; height: 300px"
+                src="/uploads/<%= pdt.images[0] %>"
+                alt="IMG-PRODUCT"
+              />
+            </a>
+          </div>
+          <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+              <a
+                href="/product-detail?id=<%= pdt._id %>"
+                class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+              >
+                <%= pdt.productName %>
+              </a>
+              <span class="stext-105 cl3">
+                <% if (pdt.stock <= 0) { %> Out of Stock <% } else { %> &#8377;
+                <%= pdt.price %> <% } %>
+              </span>
+            </div>
+            <div class="block2-txt-child2 flex-r p-t-3">
+              <a
+                href="#"
+                class="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+              >
+                <img
+                  class="icon-heart1 dis-block trans-04"
+                  src="images/icons/icon-heart-01.png"
+                  alt="ICON"
+                />
+                <img
+                  class="icon-heart2 dis-block trans-04 ab-t-l"
+                  src="images/icons/icon-heart-02.png"
+                  alt="ICON"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <!-- PRODUCT END  -->
+  </div>
+</section>
+<script>
+ 
+</script>
+
+<%- include('../include/footer') %>

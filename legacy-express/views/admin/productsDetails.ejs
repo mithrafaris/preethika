@@ -1,0 +1,202 @@
+<%- include('../include/admin_header') %>
+
+  <body class="bg-theme bg-theme1">
+
+    <!-- Start wrapper-->
+    <div id="wrapper">
+
+      <!--Start sidebar-wrapper-->
+      <div id="sidebar-wrapper" data-simplebar="" data-simplebar-auto-hide="true">
+        <div class="brand-logo">
+          <a href="/admin/dashboard">
+            <img src="/images/logo-icon.png" class="logo-icon" alt="logo icon">
+            <h5 class="logo-text">Flybees</h5>
+          </a>
+        </div>
+        <ul class="sidebar-menu do-nicescrol">
+          <li class="sidebar-header">MAIN NAVIGATION</li>
+          <li>
+            <a href="/admin/dashboard">
+              <i class="zmdi zmdi-view-dashboard"></i> <span>Dashboard</span>
+            </a>
+          </li>  
+
+          <li>
+            <a href="/admin/user_details">
+              <i class="zmdi zmdi-format-list-bulleted"></i> <span>user_details</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="/admin/category">
+              <i class="zmdi zmdi-format-list-bulleted"></i> <span>categoryManagement</span>
+            </a>
+          </li>
+         
+          
+
+        </ul>
+
+      </div>
+      <!--End sidebar-wrapper-->
+
+      <!--Start topbar header-->
+      <header class="topbar-nav">
+        <nav class="navbar navbar-expand fixed-top">
+          <ul class="navbar-nav mr-auto align-items-center">
+            <li class="nav-item">
+              <a class="nav-link toggle-menu" href="">
+                <i class="icon-menu menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <form class="search-bar">
+                <input type="text" class="form-control" placeholder="Enter keywords">
+                <a href="javascript:void();"><i class="icon-magnifier"></i></a>
+              </form>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav align-items-center right-nav-link">
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
+                <span class="user-profile"><img src="data:image/png;base64,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" class="img-circle"
+                    alt="user avatar"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li class="dropdown-item"><a href="/admin/addCategory">Add products</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </header>
+<!--End topbar header-->
+
+<div class="clearfix"></div>
+	
+  <div class="content-wrapper">
+    <div class="container-fluid">
+     
+      <div class="row mt-6">
+        <div class="col-lg-12">
+          <div class="card">
+            
+            
+            </div>
+          </div>
+        </div>
+       
+        
+
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Product</h5>
+			  <div class="table-responsive">
+               <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">product</th>
+                      <th scope="col">image</th>
+                      <th scope="col">description</th>
+                      <th scope="col">quantity</th>
+                      <th scope="col">isList</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row"></th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+            </div>
+          </div>
+        </div>
+       
+        
+	  <!--start overlay-->
+		  <div class="overlay toggle-menu"></div>
+		<!--end overlay-->
+
+    </div>
+    <!-- End container-fluid-->
+    
+    </div><!--End content-wrapper-->
+   <!--Start Back To Top Button-->
+    <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    <!--End Back To Top Button-->
+	
+	<!--Start footer-->
+	<footer class="footer">
+      <div class="container">
+        <div class="text-center">
+       
+        </div>
+      </div>
+    </footer>
+	<!--End footer-->
+	
+	<!--start color switcher-->
+   <div class="right-sidebar">
+    <div class="switcher-icon">
+      <i class="zmdi zmdi-settings zmdi-hc-spin"></i>
+    </div>
+    <div class="right-sidebar-content">
+
+      <p class="mb-0">Gaussion Texture</p>
+      <hr>
+      
+      <ul class="switcher">
+        <li id="theme1"></li>
+        <li id="theme2"></li>
+        <li id="theme3"></li>
+        <li id="theme4"></li>
+        <li id="theme5"></li>
+        <li id="theme6"></li>
+      </ul>
+
+      <p class="mb-0">Gradient Background</p>
+      <hr>
+      
+      <ul class="switcher">
+        <li id="theme7"></li>
+        <li id="theme8"></li>
+        <li id="theme9"></li>
+        <li id="theme10"></li>
+        <li id="theme11"></li>
+        <li id="theme12"></li>
+		<li id="theme13"></li>
+        <li id="theme14"></li>
+        <li id="theme15"></li>
+      </ul>
+      
+     </div>
+   </div>
+  <!--end color switcher-->
+   
+  </div><!--End wrapper-->
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+	
+  <!-- simplebar js -->
+  <script src="/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+  
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+	
+</body>
+</html>

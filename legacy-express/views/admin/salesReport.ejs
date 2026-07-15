@@ -1,0 +1,196 @@
+<%- include('../include/admin_header', { title: 'Flybees' }) %>
+<body class="bg-theme bg-theme1">
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-content-center">
+    <h3 class="mb-5  text-center">Sales Report</h3>
+  </div>
+
+  <% if (locals.message) { %>
+    <div class="alert alert-danger">
+      <strong><%= message %></strong>
+    </div>
+  <% } %>
+
+
+
+  <div class="row m-md-1 bg-white pb-2 shadow rounded ">
+    <form action="" method="post" class="form-inline d-flex gap-3">
+      <div class="col-md-3 pt-3">
+        <select class="form-select" style="border-radius: 20px;" aria-label=".form-select-sm example" name="salesRe" id="sales" onchange="getData()">
+          <option selected>Sales Category</option>
+          <option value="Daily">Daily</option>
+          <option value="Monthly">Monthly</option>
+          <option value="Yearly">Yearly</option>
+        </select>
+      </div>
+  
+      <div class="col-md-3 pt-3" style="display: none;" id="chooseMonth">
+        <select id="selectedMonth" class="form-select" style="border-radius: 20px;" aria-label=".form-select-sm example" name="month">
+          <option selected>Monthly</option>
+        <option value="2024-01-01">January 2024</option>
+        <option value="2024-02-01">February 2024</option>
+        <option value="2024-03-01">March 2024</option>
+        <option value="2024-04-01">April 2024</option>
+        <option value="2024-05-01">May 2024</option>
+        <option value="2024-06-01">June 2024</option>
+        <option value="2024-07-01">July 2024</option>
+        <option value="2024-08-01">August 2024</option>
+        <option value="2024-09-01">September 2024</option>
+        <option value="2024-10-01">October 2024</option>
+        <option value="2024-11-01">November 2024</option>
+        <option value="2024-12-01">December 2024</option>
+
+
+        </select>
+      </div>
+  
+      <div class="col-md-2 pt-3" style="display: none;" id="start">
+        <label for="startD">Start date</label>
+        <input type="date" name="startdate" id="startD"  class="form-control">
+      </div>
+  
+      <div class="col-md-2 pt-3" style="display: none;" id="end">
+        <label for="endD">End date</label>
+        <input type="date" name="enddate" id="endD"  class="form-control">
+      </div>
+  
+      <div class="col-md-2 pt-3" style="display: none;" id="chooseYear">
+        <select id="selectedYear" class="form-select" style="border-radius: 20px;" aria-label=".form-select-sm example" name="year">
+          <option selected>Year</option>
+        <option value="2024"> 2024</option>
+        </select>
+      </div>
+  
+ 
+      <div style="margin-left: 400px;" class="col-md-2 pt-3 mr-3">
+        <button class="btn btn-success ml-3" type="submit" id="report">Pdf Generate</button>
+      </div>
+    </form>
+  </div>
+  
+
+  <table class="table table-bordered table-hover table-striped text-center mt-3">
+    <thead class="">
+      <tr>
+        <th scope="col">OrderID</th>
+        <th scope="col">Client Name</th>
+        <th scope="col">Order Amount</th>
+        <th scope="col">Payment Method</th>
+        <th scope="col">Order date</th>
+        <th scope="col">Order Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (locals.orders) { %>
+        <% orders.forEach((detail) => { %>
+          <% orderId = detail.orderId %>
+          <tr class="word-wrap">
+            <td class="word-wrap"><%= detail.orderId %></td>
+            <td class="text-capitalize"><%= detail.user.name %></td>
+            <td>&#8377; <%= detail.totalAmount %></td>
+            <td><%= detail.paymentMethod %></td>
+            <td><%= detail.purchaseDate.toLocaleDateString() %></td>
+            <td><%= detail.orderItems.orderStatus %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="6">
+            <h2>No orders</h2>
+            <a href="/">Shop</a>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+   <div class="align-items-center" id="pagination">
+    <nav aria-label="Page navigation example" style="width: 30%; margin: auto;">
+        <p class="text-center">Page <%= currentPage %> of <%= totalPages %></p>
+        <ul class="pagination justify-content-center">
+            <% if (currentPage > 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                </li>
+            <% } %>
+            <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= totalPages %>">Last</a>
+                </li>
+            <% } %>
+        </ul>
+    </nav>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+   function getData() {
+      const selectedValue = document.getElementById('sales').value;
+      console.log(selectedValue);
+      const mode = selectedValue;
+      let options;
+      if (mode === "Daily") {
+        document.getElementById('chooseYear').style.display = "none";
+        document.getElementById('chooseMonth').style.display = "none";
+        // document.getElementById('chooseDay').style.display = "block";
+        document.getElementById('start').style.display = "block";
+        document.getElementById('end').style.display = "block";
+      } else if (mode === "Monthly") {
+        document.getElementById('start').style.display = "none";
+        document.getElementById('end').style.display = "none";
+        document.getElementById('chooseYear').style.display = "none";
+        document.getElementById('chooseMonth').style.display = "block";
+      } else if (mode === "Yearly") {
+        document.getElementById('chooseMonth').style.display = "none";
+        document.getElementById('start').style.display = "none";
+        document.getElementById('end').style.display = "none";
+        document.getElementById('chooseYear').style.display = "block";
+      } else {
+
+      }
+    }
+    document.getElementById('report').addEventListener('click',()=>{
+      const selectedValue = document.getElementById('sales').value;
+      console.log(selectedValue);
+      let day
+      let month
+      let year
+
+      if (selectedValue === "Daily") {
+       
+        day= document.getElementById('selectedDate').value
+       console.log(day);
+      } else if (selectedValue === "Monthly") {
+       
+       month=  document.getElementById('selectedMonth').value
+      console.log(month);
+      } else if (selectedValue === "Yearly") {
+       
+       year=  document.getElementById('selectedYear').value
+      console.log(year);
+      } else {
+
+      }
+      $.ajax({
+    method: 'POST',
+    url: '/admin/report-order',
+    data: { day, month, year,selectedValue },
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (error) {
+      console.error("Failed to filter order:", error);
+    }
+  });
+    })
+</script>
+</body>
+</html>

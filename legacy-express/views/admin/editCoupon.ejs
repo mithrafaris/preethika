@@ -1,0 +1,106 @@
+<%- include('../include/admin_header', { title: 'Flybees' }) %>
+
+<%- include('../include/adminNAV') %>
+
+    <header class="topbar-nav">
+      <nav class="navbar navbar-expand fixed-top">
+        <ul class="navbar-nav mr-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link toggle-menu" href="">
+              <i class="icon-menu menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <form class="search-bar">
+              <input type="text" class="form-control" placeholder="Enter keywords">
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="container-fluid">
+            <div class=" mt-md-4 pb-md-2  b">
+                        <h2 class="fw-bold mb-2 text-uppercase text-black pb-3">
+                          Edit Coupon
+                        </h2>
+                        <% if(couponData){ %>
+                            <% couponData.forEach(item=>{ %>
+                          <form class="p-md-2" action=" " method="post">
+                           
+                            <input class="form-control form-control-lg text-black-50" type="text" name="coupon_name" placeholder="Coupon Name"
+                              id="couponName" value="<%=item.couponName %>"" />
+                            <span id="Name"></span><br />
+        
+                            <div class="input-group ">
+                              <input class="form-control form-control-lg text-black-50 no-arrows" type="number" name="offer" placeholder="Offer Price"
+                                id="couponOffer" value="<%= couponData?item.couponValue:'' %>" />
+                              
+                            </div>
+                            <div class="input-group ">
+                              <input class="form-control form-control-lg text-black-50" type="hidden" name="id" placeholder="Coupon id"
+                              id="couponId" value="<%=item._id %>"" />
+                              
+                            </div>
+                            <span id="Email"></span><br />
+                            <input class="form-control form-control-lg text-black-50 no-arrows" type="number" name="min_value" placeholder="Min Value"
+                              id="min_Value" value="<%= couponData?item.minValue:'' %>" />
+                            <span id="Number"></span><br />
+                            <input class="form-control form-control-lg text-black-50 no-arrows" type="number" name="max_value" placeholder="Max Value"
+                              id="maxValue" value="<%= couponData?item.maxValue:'' %>" />
+                            <span id="Password"></span><br />
+                            <input class="form-control form-control-lg text-black-50" type="date" name="expiry_date" placeholder="Expiry Date"
+                              id="expiryDate" value="<%= couponData?item.expiryDate:'' %>" />
+                            <input class="btn btn-primary mt-md-4" type="submit" value="Add Coupon"
+                              style="background-color:transparent" />
+                          </form>
+        
+                          <% if(typeof message !=='undefined' ) { %>
+                            <p style="color: red">
+                              <%= message %>
+                            </p>
+                            <% } %>
+                            <% }) %>
+                        <% }%>
+        
+                        
+                      </div>
+      </div><!-- End Row -->
+
+      <!-- Start Back To Top Button -->
+      <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    </div>
+
+
+  </div><!-- End wrapper -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+
+  <!-- simplebar js -->
+  <script src="/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+  <script>
+            const err = document.getElementById('price')
+            // const err = document.getElementById('price')
+            function validatePrice(input){
+                  const inputValue = input.value.trim();
+                  console.log( inputValue < 100);
+                  if(inputValue < 1){
+                    err.innerHTML = "Price should be a number and above 1";        
+                  }else{
+                  err.innerHTML=""
+                }
+                }
+          </script>
+
+</body>
+
+</html>

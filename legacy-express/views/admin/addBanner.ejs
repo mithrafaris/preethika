@@ -1,0 +1,112 @@
+<%- include('../include/admin_header', { title: 'Flybees' }) %>
+<%- include('../include/adminNAV') %>
+
+    <header class="topbar-nav">
+      <nav class="navbar navbar-expand fixed-top">
+        <ul class="navbar-nav mr-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link toggle-menu" href="">
+              <i class="icon-menu menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <form class="search-bar">
+              <input type="text" class="form-control" placeholder="Enter keywords">
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="container-fluid">
+        <div class="col-lg-9">
+            <form action="" method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+              
+                          <div class="row align-items-center py-3">
+                            <div class="col-md-3 ps-5">
+              
+                              <h6 class="mb-0">Banner Name</h6>
+              
+                            </div>
+                            <div class="col-md-9 pe-5">
+              
+                              <input type="text" id="name" class="form-control" name="bannerName" placeholder="Enter Banner Name" required>
+              
+                            </div>
+                          </div>
+                          
+              
+              
+                          <div class="row align-items-center py-3">
+                            <div class="col-md-3 ps-5">
+              
+                              <h6 class="mb-0">Banner Title</h6>
+              
+                            </div>
+                            <div class="col-md-9 pe-5">
+              
+                              <textarea class="form-control" rows="2" name="title"></textarea>
+              
+                            </div>
+                          </div>
+                          <div class="row align-items-center py-3">
+                            <div class="col-md-3 ps-5">
+              
+                              <h6 class="mb-0">Banner Subtitle</h6>
+              
+                            </div>
+                            <div class="col-md-9 pe-5">
+              
+                              <textarea class="form-control" rows="2" name="subtitle"></textarea>
+              
+                            </div>
+                          </div>
+            
+            
+                          
+                        
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+                  
+                                  <h6 class="mb-0">Banner Image upload</h6>
+                  
+                                </div>
+                            <div style="flex: 1;">
+                              <input type="file" class="form-control" name="file" >
+                              <img id="image-preview" src="#" alt="Preview" style="display: none; max-width: 100%; max-height: 200px;">
+                              <button id="delete-button" style="display: none;">Delete</button>
+                          </div>
+                          </div>
+                          <div class="px-5 py-4 text-center">
+                            <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                          </div>
+                        </div>
+                    </form>
+        </div>
+      </div><!-- End Row -->
+
+      <!-- Start Back To Top Button -->
+      <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    </div>
+
+
+  </div><!-- End wrapper -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+
+  <!-- simplebar js -->
+  <script src="/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+
+</body>
+
+</html>

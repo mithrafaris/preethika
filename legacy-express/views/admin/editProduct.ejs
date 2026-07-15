@@ -1,0 +1,326 @@
+<%- include('../include/admin_header', { title: 'Flybees' }) %>
+<%- include('../include/adminNAV') %>
+<body class="bg-theme bg-theme1">
+
+  <!-- Start wrapper-->
+  <div id="wrapper">
+
+    <!-- Start sidebar-wrapper-->
+    <div id="sidebar-wrapper" data-simplebar="" data-simplebar-auto-hide="true">
+      <div class="brand-logo">
+        <a href="/admin/dashboard">
+          <img src="/images/logo-icon.png" class="logo-icon" alt="logo icon">
+          <h5 class="logo-text">Flybees</h5>
+        </a>
+      </div>
+      <ul class="sidebar-menu do-nicescrol">
+        <li class="sidebar-header">MAIN NAVIGATION</li>
+        <li>
+          <a href="/admin/dashboard">
+            <i class="zmdi zmdi-view-dashboard"></i> <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin/user_details">
+            <i class="zmdi zmdi-format-list-bulleted"></i> <span>user_details</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin/products">
+            <i class="zmdi zmdi-format-list-bulleted"></i> <span>productsDetailes</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin/category">
+            <i class="zmdi zmdi-format-list-bulleted"></i> <span>categoryManagement</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <header class="topbar-nav">
+      <nav class="navbar navbar-expand fixed-top">
+        <ul class="navbar-nav mr-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link toggle-menu" href="">
+              <i class="icon-menu menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <form class="search-bar">
+              <input type="text" class="form-control" placeholder="Enter keywords">
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="container-fluid">
+        <div class="col-lg-6">
+          <form action="/admin/products/edit" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+              
+              <div class="col-md-9 pe-5">
+  
+                <input type="hidden" class="form-control form-control-lg" value="<%=product._id %>" name="productIdentity" />
+
+              </div>
+              <div class="row align-items-center py-3">
+                <div class="col-md-3 ps-5">
+  
+                  <h6 class="mb-0">Product Name</h6>
+  
+                </div>
+                <div class="col-md-9 pe-5">
+  
+                  <input type="text" class="form-control form-control-lg" value="<%=product.productName %>" name="productName" />
+  
+                </div>
+              </div>
+  
+              <hr class="mx-n3">
+
+              <div class="row align-items-center py-3">
+                <div class="col-md-3 ps-5">
+  
+                  <h6 class="mb-0">Product Price</h6>
+  
+                </div>
+                <div class="col-md-9 pe-5">
+                  <p class="text-danger" id="price"></p>
+                  <input type="number" class="form-control form-control-lg" value="<%=product.price %>" name="price" min="100" oninput="validatePrice(this)"/>
+  
+                </div>
+              </div>
+  
+              <hr class="mx-n3">
+
+              <div class="row align-items-center py-3">
+                <div class="col-md-3 ps-5">
+  
+                  <h6 class="mb-0">Product Stock</h6>
+  
+                </div>
+                <div class="col-md-9 pe-5">
+  
+                  <input type="number" class="form-control form-control-lg" value="<%=product.stock %>" name="stock" min="1" />
+  
+                </div>
+              </div>
+  
+              <hr class="mx-n3">
+
+              <div class="row align-items-center py-3" style="display: flex;">
+                <div class="col-md-3 ps-5" style="flex: 1;">
+  
+                  <h6 class="mb-0">Product Category</h6>
+  
+                </div>
+                <div style="flex: 1;">
+                  <select name="selectcategory" class="form-select mr-5" aria-label="Default select example">
+                      <option value="<%= product.productCategory %>" selected><%= product.productCategory %></option>
+                      <% categories.forEach((category) => { %>
+                          <% if(product.productCategory != category.categoryName) { %>
+                              <option value="<%= category.categoryName %>"><%= category.categoryName %></option>
+                          <% } %>
+                      <% }) %>
+                  </select>
+              </div>
+              
+  
+              <hr class="mx-n3">
+
+              <div class="row align-items-center py-3">
+                <div class="col-md-3 ps-5">
+  
+                  <h6 class="mb-0">Product Details</h6>
+  
+                </div>
+                <div class="col-md-9 pe-5">
+  
+                  <textarea class="form-control" rows="3"  name="description"><%=product.description %></textarea>
+  
+                </div>
+              </div>
+
+              <hr class="mx-n3">
+
+              <div class="row align-items-center py-3">
+                <div class="col-md-3 ps-5">
+                  
+                  <h6 class="mb-0">Product Images</h6>
+  
+                  <div class="thumbnail text-center" style="width: 600px; display: flex; justify-content: space-around;" >
+                    <% var images = product.images; %>
+                    <% for (var i=0;i< images.length;i++) { %>
+                      <div style="width: 100px; height: 200px;">
+                      <img src="/uploads/<%= images[i] %>" width="50"  style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; margin-left: 10px;">
+                     <a href="/admin/product/deleteimage?productImages=<%= images[i] %>&id=<%= product._id %>" class="btn btn-outline-danger" style="margin-top: 10px;"><i class="fa fa-remove" style="font-size:15px"></i></a>
+
+
+
+                    </div>
+                    <% } %>
+                  </div>
+                </div>
+
+              <hr class="mx-n3">
+              
+              <div style="display: flex;">
+
+                <div class="col-md-3 ps-5" style="flex: 1;" >
+    
+                  <h6 class="mb-0" >Category Image upload</h6>
+  
+                </div>
+                <div style="flex: 1;">
+                  <div>
+                    <p class="text-danger" id="img"></p>
+                  </div>
+                <input class="form-control" name="file" type="file" id="formFileMultiple" multiple oninput="validateImageCount(this)"/>
+              </div>
+              </div>
+  
+              <hr class="mx-n3">
+  
+              <div class="px-5 py-4 text-center">
+                <button type="submit" class="btn btn-success btn-lg">Submit</button>
+              </div>
+  
+            </div>
+        </form>
+        </div>
+      </div><!-- End Row -->
+
+      <!-- Start Back To Top Button -->
+      <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    </div><!-- End content-wrapper -->
+
+
+  </div><!-- End wrapper -->
+  <script>
+    const err = document.getElementById('price')
+    const img = document.getElementById('img')
+    const num =3
+    
+    console.log(num >= 3 && num <=3);
+   function validatePrice(input){
+      const inputValue = input.value.trim();
+      console.log( inputValue < 100);
+      if(inputValue < 100){
+        err.innerHTML = "Price should be a number and above 100";        
+      }else{
+      err.innerHTML=""
+    }
+    }
+    function validateImageCount(input) { 
+      const inputFile = input.files
+      console.log(inputFile);
+      if (inputFile.length !== 3) {
+      // If more than 3 files are selected, clear the input field and show an error message
+      input.value = null; // Clear the selected files
+     img.innerHTML="Please select a maximum of 3 images."
+  }else {
+    img.innerHTML=""
+  }
+     }
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get a reference to the form and form fields
+    const form = document.querySelector("form");
+    const productName = document.querySelector('input[name="productName"]');
+    const price = document.querySelector('input[name="price"]');
+    const stock = document.querySelector('input[name="stock"]');
+    const category = document.querySelector('select[name="category"]');
+    const description = document.querySelector('textarea[name="description"]');
+    const file = document.querySelector('input[name="file"]');
+
+
+   
+    form.addEventListener("submit", function (event) {
+      // Initialize a flag to check if the form is valid
+      let isValid = true;
+
+      // Validation for Product Name: Required field
+      if (productName.value.trim() === "") {
+        isValid = false;
+         alert("Product Name is required.");
+        err.innerHTML="Product Name is required."
+      }
+
+      // Validation for Product Price: Required and numeric field
+      if (price.value.trim() === "") {
+        isValid = false;
+        alert("Product Price is required.");
+      } else if (isNaN(price.value)) {
+        isValid = false;
+        alert("Product Price must be a valid number.");
+      }else if(price.value < 1){
+        isValid = false;
+        alert("Product Price must be a valid number.");
+      }
+
+      // Validation for Product Stock: Required and numeric field
+      if (stock.value.trim() === "") {
+        isValid = false;
+        alert("Product Stock is required.");
+      } else if (isNaN(stock.value)) {
+        isValid = false;
+        alert("Product Stock must be a valid number.");
+      }
+
+      // Validation for Product Category: Required
+      if (category.value === "Select the category") {
+        isValid = false;
+        alert("Please select a Product Category.");
+      }
+
+      // Validation for Product Details: Required field
+      if (description.value.trim() === "") {
+        isValid = false;
+        alert("Product Details are required.");
+      }
+
+      // Validation for Product Image: Check if a file is selected
+      if (file.files.length === 0) {
+        isValid = false;
+        alert("Please select at least one Product Image.");
+      }
+
+      // Prevent form submission if validation fails
+      if (!isValid) {
+        event.preventDefault();
+      }
+    });
+   });
+</script>
+  
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+
+  <!-- simplebar js -->
+  <script src="/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/js/sidebar-menu.js"></script>
+
+  <!-- Custom scripts -->
+  <script src="/js/app-script.js"></script>
+
+</body>
+
+</html>
+ <!-- <span class="user-profile"
+            ><img
+              src="https://3dicons.sgp1.cdn.digitaloceanspaces.com/v1/dynamic/premium/lock-dynamic-premium.png"
+              class="img-circle"
+              alt="user avatar"
+          /></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li class="dropdown-item">
+            <a href="/Adminlogin">LOGOUT</a>
+          </li>
+        </ul> -->
