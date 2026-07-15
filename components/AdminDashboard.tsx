@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Users, ShoppingBag, ShoppingCart, FileSpreadsheet, 
-  ShieldAlert, UserCheck, UserMinus, Plus, Trash2, Edit, ChevronRight, LogOut, CheckCircle, Package, Receipt, Tag, Image as ImageIcon 
+  ShieldAlert, UserCheck, UserMinus, Plus, Trash2, Edit, ChevronRight, LogOut, CheckCircle, Package, Receipt, Tag, Image as ImageIcon, FolderTree
 } from 'lucide-react';
 
 interface UserData {
@@ -79,7 +79,8 @@ export default function AdminDashboard({
   initialCoupons = [],
   initialBanners = [],
 }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'products' | 'orders' | 'reports' | 'coupons' | 'banners'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'products' | 'orders' | 'reports' | 'categories' | 'coupons' | 'banners'>('dashboard');
+  const [categories, setCategories] = useState<CategoryData[]>(initialCategories);
   const [users, setUsers] = useState<UserData[]>(initialUsers);
   const [products, setProducts] = useState<ProductData[]>(initialProducts);
   const [orders, setOrders] = useState<OrderData[]>(initialOrders);
@@ -94,6 +95,142 @@ export default function AdminDashboard({
   const [prodDesc, setProdDesc] = useState('');
   const [prodImg, setProdImg] = useState('');
   const [prodCat, setProdCat] = useState(initialCategories[0]?._id || '');
+
+  // Category Add/Edit Form State
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
+  const [catName, setCatName] = useState('');
+
+  const handleSaveCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const method = editCategoryId ? 'PUT' : 'POST';
+      const body = editCategoryId 
+        ? JSON.stringify({ _id: editCategoryId, categoryName: catName, isList: true })
+        : JSON.stringify({ categoryName: catName });
+        
+      const res = await fetch('/api/admin/categories', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (editCategoryId) {
+          setCategories(categories.map(c => c._id === editCategoryId ? data : c));
+        } else {
+          setCategories([data, ...categories]);
+        }
+        setShowCategoryForm(false);
+        setCatName('');
+        setEditCategoryId(null);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Coupon Add/Edit Form State
+  const [showCouponForm, setShowCouponForm] = useState(false);
+  const [editCouponId, setEditCouponId] = useState<string | null>(null);
+  const [couponName, setCouponName] = useState('');
+  const [couponValue, setCouponValue] = useState('');
+  const [couponExpiry, setCouponExpiry] = useState('');
+  const [couponMin, setCouponMin] = useState('');
+  const [couponMax, setCouponMax] = useState('');
+
+  const handleSaveCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const method = editCouponId ? 'PUT' : 'POST';
+      const bodyData = {
+        couponName,
+        couponValue: Number(couponValue),
+        expiryDate: couponExpiry,
+        minValue: Number(couponMin),
+        maxValue: Number(couponMax),
+        isList: true,
+      };
+      
+      const body = editCouponId 
+        ? JSON.stringify({ _id: editCouponId, ...bodyData })
+        : JSON.stringify(bodyData);
+        
+      const res = await fetch('/api/admin/coupons', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (editCouponId) {
+          setCoupons(coupons.map(c => c._id === editCouponId ? data : c));
+        } else {
+          setCoupons([data, ...coupons]);
+        }
+        setShowCouponForm(false);
+        setEditCouponId(null);
+        setCouponName('');
+        setCouponValue('');
+        setCouponExpiry('');
+        setCouponMin('');
+        setCouponMax('');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Banner Add/Edit Form State
+  const [showBannerForm, setShowBannerForm] = useState(false);
+  const [editBannerId, setEditBannerId] = useState<string | null>(null);
+  const [bannerName, setBannerName] = useState('');
+  const [bannerTitle, setBannerTitle] = useState('');
+  const [bannerSubtitle, setBannerSubtitle] = useState('');
+  const [bannerImage, setBannerImage] = useState('');
+
+  const handleSaveBanner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const method = editBannerId ? 'PUT' : 'POST';
+      const bodyData = {
+        bannerName,
+        title: bannerTitle,
+        subtitle: bannerSubtitle,
+        image: bannerImage,
+        isList: true,
+      };
+      
+      const body = editBannerId 
+        ? JSON.stringify({ _id: editBannerId, ...bodyData })
+        : JSON.stringify(bodyData);
+        
+      const res = await fetch('/api/admin/banners', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (editBannerId) {
+          setBanners(banners.map(b => b._id === editBannerId ? data : b));
+        } else {
+          setBanners([data, ...banners]);
+        }
+        setShowBannerForm(false);
+        setEditBannerId(null);
+        setBannerName('');
+        setBannerTitle('');
+        setBannerSubtitle('');
+        setBannerImage('');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Toggle user block status
   const handleToggleBlock = async (userId: string, isBlock: boolean) => {
@@ -228,6 +365,15 @@ export default function AdminDashboard({
             >
               <FileSpreadsheet className="h-4.5 w-4.5" />
               <span>Sales Reports</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('categories')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold tracking-wide transition-all text-left cursor-pointer ${
+                activeTab === 'categories' ? 'bg-violet-600 text-white' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <FolderTree className="h-4.5 w-4.5" />
+              <span>Categories</span>
             </button>
             <button
               onClick={() => setActiveTab('coupons')}
@@ -684,7 +830,118 @@ export default function AdminDashboard({
             </motion.div>
           )}
 
-          {/* TAB 6: COUPONS */}
+          {/* TAB 6: CATEGORIES */}
+          {activeTab === 'categories' && (
+            <motion.div
+              key="categories"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-8"
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase">Categories</h1>
+                  <p className="text-xs text-zinc-500 font-semibold mt-1">MANAGE PRODUCT CLASSIFICATIONS</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditCategoryId(null);
+                    setCatName('');
+                    setShowCategoryForm(true);
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 px-4 py-2 text-xs font-bold text-white transition-colors cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Category</span>
+                </button>
+              </div>
+
+              {/* Add/Edit Category Modal */}
+              <AnimatePresence>
+                {showCategoryForm && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <motion.form
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      onSubmit={handleSaveCategory}
+                      className="glass-card max-w-sm w-full p-6 rounded-3xl border border-zinc-800 space-y-4"
+                    >
+                      <div className="pb-2 border-b border-zinc-850 flex justify-between items-center">
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+                          {editCategoryId ? 'Edit Category' : 'New Category'}
+                        </h4>
+                        <button type="button" onClick={() => setShowCategoryForm(false)} className="text-zinc-500 hover:text-white">✕</button>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-400 uppercase">Category Name</label>
+                        <input
+                          type="text" required value={catName} onChange={(e) => setCatName(e.target.value)}
+                          placeholder="e.g. Electronics"
+                          className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                        />
+                      </div>
+
+                      <div className="flex gap-4 justify-end pt-2">
+                        <button
+                          type="button" onClick={() => setShowCategoryForm(false)}
+                          className="px-4 py-2 rounded-xl border border-zinc-800 text-xs text-zinc-400 hover:text-white cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-semibold text-white cursor-pointer"
+                        >
+                          {editCategoryId ? 'Update' : 'Add'}
+                        </button>
+                      </div>
+                    </motion.form>
+                  </div>
+                )}
+              </AnimatePresence>
+
+              {/* Categories Table */}
+              <div className="glass-card rounded-3xl border border-zinc-800/80 bg-zinc-900/10 overflow-hidden">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-zinc-850 text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-950/20">
+                      <th className="px-6 py-4">ID</th>
+                      <th className="px-6 py-4">Category Name</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {categories.length === 0 ? (
+                      <tr><td colSpan={3} className="text-center py-6 text-zinc-500 text-xs">No categories found.</td></tr>
+                    ) : categories.map(c => (
+                      <tr key={c._id} className="border-b border-zinc-900 text-xs hover:bg-zinc-900/10 transition-colors">
+                        <td className="px-6 py-4 font-mono text-zinc-500 text-[10px]">{c._id}</td>
+                        <td className="px-6 py-4 font-bold text-white uppercase">{c.categoryName}</td>
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            onClick={() => {
+                              setEditCategoryId(c._id);
+                              setCatName(c.categoryName);
+                              setShowCategoryForm(true);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer bg-zinc-900/50 hover:bg-zinc-800 text-zinc-300 border border-zinc-800"
+                          >
+                            <Edit className="h-3 w-3" />
+                            <span>Edit</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
+
+          {/* TAB 7: COUPONS */}
           {activeTab === 'coupons' && (
             <motion.div
               key="coupons"
@@ -693,10 +950,113 @@ export default function AdminDashboard({
               exit={{ opacity: 0, y: -15 }}
               className="space-y-8"
             >
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase">Coupons</h1>
-                <p className="text-xs text-zinc-500 font-semibold mt-1">MANAGE DISCOUNT CODES AND PROMOTIONS</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase">Coupons</h1>
+                  <p className="text-xs text-zinc-500 font-semibold mt-1">MANAGE DISCOUNT CODES AND PROMOTIONS</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditCouponId(null);
+                    setCouponName('');
+                    setCouponValue('');
+                    setCouponExpiry('');
+                    setCouponMin('');
+                    setCouponMax('');
+                    setShowCouponForm(true);
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 px-4 py-2 text-xs font-bold text-white transition-colors cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Coupon</span>
+                </button>
               </div>
+
+              {/* Add/Edit Coupon Modal */}
+              <AnimatePresence>
+                {showCouponForm && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <motion.form
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      onSubmit={handleSaveCoupon}
+                      className="glass-card max-w-md w-full p-6 rounded-3xl border border-zinc-800 space-y-4"
+                    >
+                      <div className="pb-2 border-b border-zinc-850 flex justify-between items-center">
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+                          {editCouponId ? 'Edit Coupon' : 'New Coupon'}
+                        </h4>
+                        <button type="button" onClick={() => setShowCouponForm(false)} className="text-zinc-500 hover:text-white">✕</button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase">Coupon Code</label>
+                            <input
+                              type="text" required value={couponName} onChange={(e) => setCouponName(e.target.value.toUpperCase())}
+                              placeholder="e.g. SUMMER10"
+                              className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none uppercase"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase">Discount (%)</label>
+                            <input
+                              type="number" required value={couponValue} onChange={(e) => setCouponValue(e.target.value)}
+                              placeholder="e.g. 10"
+                              className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase">Min Spend (₹)</label>
+                            <input
+                              type="number" required value={couponMin} onChange={(e) => setCouponMin(e.target.value)}
+                              placeholder="e.g. 1000"
+                              className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase">Max Cap (₹)</label>
+                            <input
+                              type="number" required value={couponMax} onChange={(e) => setCouponMax(e.target.value)}
+                              placeholder="e.g. 500"
+                              className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                          />
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-400 uppercase">Expiry Date (DD-MM-YYYY)</label>
+                          <input
+                            type="text" required value={couponExpiry} onChange={(e) => setCouponExpiry(e.target.value)}
+                            placeholder="e.g. 31-12-2025"
+                            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 justify-end pt-2">
+                        <button
+                          type="button" onClick={() => setShowCouponForm(false)}
+                          className="px-4 py-2 rounded-xl border border-zinc-800 text-xs text-zinc-400 hover:text-white cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-semibold text-white cursor-pointer"
+                        >
+                          {editCouponId ? 'Update' : 'Add'}
+                        </button>
+                      </div>
+                    </motion.form>
+                  </div>
+                )}
+              </AnimatePresence>
 
               <div className="glass-card rounded-3xl border border-zinc-800/80 bg-zinc-900/10 overflow-hidden">
                 <table className="w-full text-left border-collapse">
@@ -707,11 +1067,12 @@ export default function AdminDashboard({
                       <th className="px-6 py-4">Min Spend</th>
                       <th className="px-6 py-4">Max Cap</th>
                       <th className="px-6 py-4">Expires</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {coupons.length === 0 ? (
-                      <tr><td colSpan={5} className="text-center py-6 text-zinc-500 text-xs">No coupons found. API integration pending for Create.</td></tr>
+                      <tr><td colSpan={6} className="text-center py-6 text-zinc-500 text-xs">No coupons found.</td></tr>
                     ) : coupons.map(c => (
                       <tr key={c._id} className="border-b border-zinc-900 text-xs hover:bg-zinc-900/10 transition-colors">
                         <td className="px-6 py-4 font-bold text-white uppercase">{c.couponName}</td>
@@ -719,6 +1080,23 @@ export default function AdminDashboard({
                         <td className="px-6 py-4 text-zinc-300">₹{c.minValue}</td>
                         <td className="px-6 py-4 text-zinc-300">₹{c.maxValue}</td>
                         <td className="px-6 py-4 text-zinc-400">{c.expiryDate}</td>
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            onClick={() => {
+                              setEditCouponId(c._id);
+                              setCouponName(c.couponName);
+                              setCouponValue(c.couponValue.toString());
+                              setCouponExpiry(c.expiryDate);
+                              setCouponMin(c.minValue.toString());
+                              setCouponMax(c.maxValue.toString());
+                              setShowCouponForm(true);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer bg-zinc-900/50 hover:bg-zinc-800 text-zinc-300 border border-zinc-800"
+                          >
+                            <Edit className="h-3 w-3" />
+                            <span>Edit</span>
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -727,7 +1105,7 @@ export default function AdminDashboard({
             </motion.div>
           )}
 
-          {/* TAB 7: BANNERS */}
+          {/* TAB 8: BANNERS */}
           {activeTab === 'banners' && (
             <motion.div
               key="banners"
@@ -736,10 +1114,101 @@ export default function AdminDashboard({
               exit={{ opacity: 0, y: -15 }}
               className="space-y-8"
             >
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase">Banners</h1>
-                <p className="text-xs text-zinc-500 font-semibold mt-1">MANAGE HOMEPAGE CAROUSEL BANNERS</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase">Banners</h1>
+                  <p className="text-xs text-zinc-500 font-semibold mt-1">MANAGE HOMEPAGE CAROUSEL BANNERS</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditBannerId(null);
+                    setBannerName('');
+                    setBannerTitle('');
+                    setBannerSubtitle('');
+                    setBannerImage('');
+                    setShowBannerForm(true);
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 px-4 py-2 text-xs font-bold text-white transition-colors cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Banner</span>
+                </button>
               </div>
+
+              {/* Add/Edit Banner Modal */}
+              <AnimatePresence>
+                {showBannerForm && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <motion.form
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      onSubmit={handleSaveBanner}
+                      className="glass-card max-w-md w-full p-6 rounded-3xl border border-zinc-800 space-y-4"
+                    >
+                      <div className="pb-2 border-b border-zinc-850 flex justify-between items-center">
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+                          {editBannerId ? 'Edit Banner' : 'New Banner'}
+                        </h4>
+                        <button type="button" onClick={() => setShowBannerForm(false)} className="text-zinc-500 hover:text-white">✕</button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-400 uppercase">Banner Name (Internal)</label>
+                          <input
+                            type="text" required value={bannerName} onChange={(e) => setBannerName(e.target.value)}
+                            placeholder="e.g. Summer Sale 2025"
+                            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-400 uppercase">Heading Title</label>
+                          <input
+                            type="text" required value={bannerTitle} onChange={(e) => setBannerTitle(e.target.value)}
+                            placeholder="e.g. Massive Discounts"
+                            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-400 uppercase">Subtitle / Description</label>
+                          <input
+                            type="text" required value={bannerSubtitle} onChange={(e) => setBannerSubtitle(e.target.value)}
+                            placeholder="e.g. Get up to 50% off on all items"
+                            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-400 uppercase">Image URL</label>
+                          <input
+                            type="text" required value={bannerImage} onChange={(e) => setBannerImage(e.target.value)}
+                            placeholder="https://images.unsplash.com/..."
+                            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-xs text-zinc-200 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 justify-end pt-2">
+                        <button
+                          type="button" onClick={() => setShowBannerForm(false)}
+                          className="px-4 py-2 rounded-xl border border-zinc-800 text-xs text-zinc-400 hover:text-white cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-semibold text-white cursor-pointer"
+                        >
+                          {editBannerId ? 'Update' : 'Add'}
+                        </button>
+                      </div>
+                    </motion.form>
+                  </div>
+                )}
+              </AnimatePresence>
 
               <div className="glass-card rounded-3xl border border-zinc-800/80 bg-zinc-900/10 overflow-hidden">
                 <table className="w-full text-left border-collapse">
@@ -749,11 +1218,12 @@ export default function AdminDashboard({
                       <th className="px-6 py-4">Banner Name</th>
                       <th className="px-6 py-4">Title</th>
                       <th className="px-6 py-4">Subtitle</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {banners.length === 0 ? (
-                      <tr><td colSpan={4} className="text-center py-6 text-zinc-500 text-xs">No banners found. API integration pending for Create.</td></tr>
+                      <tr><td colSpan={5} className="text-center py-6 text-zinc-500 text-xs">No banners found.</td></tr>
                     ) : banners.map(b => (
                       <tr key={b._id} className="border-b border-zinc-900 text-xs hover:bg-zinc-900/10 transition-colors">
                         <td className="px-6 py-4">
@@ -765,6 +1235,22 @@ export default function AdminDashboard({
                         <td className="px-6 py-4 font-bold text-white uppercase">{b.bannerName}</td>
                         <td className="px-6 py-4 text-zinc-300">{b.title}</td>
                         <td className="px-6 py-4 text-zinc-400">{b.subtitle}</td>
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            onClick={() => {
+                              setEditBannerId(b._id);
+                              setBannerName(b.bannerName);
+                              setBannerTitle(b.title);
+                              setBannerSubtitle(b.subtitle);
+                              setBannerImage(b.image);
+                              setShowBannerForm(true);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer bg-zinc-900/50 hover:bg-zinc-800 text-zinc-300 border border-zinc-800"
+                          >
+                            <Edit className="h-3 w-3" />
+                            <span>Edit</span>
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
