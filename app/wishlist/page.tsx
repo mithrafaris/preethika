@@ -25,7 +25,7 @@ export default async function WishlistPage() {
   await dbConnect();
   
   // Populate wishlist
-  const user = await User.findById(decoded.id)
+  const user = await User.findById(decoded.userId)
     .populate({
       path: 'wishlist',
       model: Product,

@@ -21,7 +21,7 @@ export async function GET() {
     }
 
     await dbConnect();
-    const user = await User.findById(decoded.id).populate('wishlist').lean();
+    const user = await User.findById(decoded.userId).populate('wishlist').lean();
     
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
 
     await dbConnect();
-    const user = await User.findById(decoded.id);
+    const user = await User.findById(decoded.userId);
     
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
