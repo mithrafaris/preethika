@@ -4,7 +4,7 @@ import { rateLimit } from './lib/rate-limit';
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('session_token')?.value;
   const { pathname } = request.nextUrl;
-  const ip = request.headers.get('x-forwarded-for') || request.ip || '127.0.0.1';
+  const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
 
   // Rate Limiting for API routes
   if (pathname.startsWith('/api/')) {

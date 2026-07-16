@@ -13,7 +13,10 @@ async function getUserId() {
 }
 
 // UPDATE Address
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await getUserId();
     if (!userId) {
@@ -58,7 +61,10 @@ export async function PUT(request: Request, context: { params: { id: string } })
 }
 
 // DELETE Address
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await getUserId();
     if (!userId) {

@@ -24,6 +24,7 @@ interface ProductData {
   productName: string;
   price: number;
   stock: number;
+  description?: string;
   images: string[];
   isList: boolean;
   category?: {
@@ -40,6 +41,7 @@ interface OrderData {
   purchaseDate: string;
   paymentMethod: string;
   status: string;
+  items?: any[];
 }
 
 interface CategoryData {
@@ -1091,7 +1093,7 @@ export default function AdminDashboard({
                         <Tooltip 
                           contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '12px' }}
                           itemStyle={{ color: '#fff', fontSize: '12px' }}
-                          formatter={(value: number) => [`₹${value}`, 'Sales']}
+                          formatter={(value: any) => [`₹${value}`, 'Sales']}
                         />
                         <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#a1a1aa' }} />
                       </PieChart>
