@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Script from 'next/script';
 import { motion } from 'framer-motion';
 import { Wallet, Plus, ArrowLeft, ArrowUpRight, ArrowDownLeft, Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface Transaction {
   id: string;
@@ -103,32 +104,76 @@ export default function WalletPage() {
 
     setAdding(true);
     try {
-      const res = await fetch('/api/wallet/add', {
+      const rzpRes = await fetch('/api/wallet/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount }),
       });
+      const rzpData = await rzpRes.json();
+      if (!rzpRes.ok) throw new Error(rzpData.error || 'Failed to initialize payment');
 
-      if (res.ok) {
-        setBalance((prev) => prev + amount);
-        setAddAmount('');
-        // Add fund transaction visually
-        setTransactions([
-          {
-            id: 'TX-' + Math.floor(Math.random() * 100000),
-            type: 'credit',
-            amount,
-            date: new Date().toLocaleDateString('en-IN'),
-            description: 'Added funds to wallet',
-          },
-          ...transactions,
-        ]);
-        // Trigger Navbar layout state update
-        window.dispatchEvent(new Event('popstate'));
-      }
+      const options = {
+        key: rzpData.key,
+        amount: rzpData.amount,
+        currency: 'INR',
+        name: 'Preethika',
+        description: 'Wallet Top-up',
+        order_id: rzpData.orderId,
+        handler: async function (response: any) {
+          try {
+            const res = await fetch('/api/wallet/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+              }),
+            });
+            
+            if (res.ok) {
+              setBalance((prev) => prev + amount);
+              setAddAmount('');
+              setTransactions([
+                {
+                  id: 'TX-' + Math.floor(Math.random() * 100000),
+                  type: 'credit',
+                  amount,
+                  date: new Date().toLocaleDateString('en-IN'),
+                  description: 'Added funds to wallet via UPI',
+                },
+                ...transactions,
+              ]);
+              window.dispatchEvent(new Event('popstate'));
+            } else {
+              const errorData = await res.json();
+              alert(errorData.error || 'Payment verification failed');
+            }
+          } catch (err) {
+            console.error('Verification Error:', err);
+            alert('An error occurred while verifying the payment.');
+          } finally {
+            setAdding(false);
+          }
+        },
+        prefill: {
+          name: 'Customer',
+          email: 'demo@example.com',
+          contact: '9999999999'
+        },
+        theme: { color: '#6d28d9' }
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.on('payment.failed', function () {
+         alert('Payment failed or cancelled.');
+         setAdding(false);
+      });
+      rzp1.open();
     } catch (err) {
       console.error(err);
-    } finally {
+      alert('Failed to initialize payment');
       setAdding(false);
     }
   };
@@ -142,6 +187,8 @@ export default function WalletPage() {
   }
 
   return (
+    <>
+    <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 flex flex-col justify-center w-full">
       <div className="flex items-center gap-3 mb-8">
         <button onClick={() => router.push('/')} className="p-1.5 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer">
@@ -224,5 +271,6 @@ export default function WalletPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
