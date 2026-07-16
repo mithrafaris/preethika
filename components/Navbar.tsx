@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, User, Wallet, LogOut, ShieldAlert, Search, Heart } from 'lucide-react';
+import { ShoppingCart, User, Wallet, LogOut, ShieldAlert, Search, Heart, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
 interface UserSession {
