@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import User from '@/lib/models/User';
 import { signToken } from '@/lib/jwt';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -44,7 +45,11 @@ export async function POST(request: Request) {
       isadmin: user.isadmin || false,
     });
 
+    // Send Welcome Email asynchronously
+    sendWelcomeEmail(user.email, user.name).catch(console.error);
+
     const cookieStore = await cookies();
+    const response = NextResponse.json({ success: true, message: 'Registration successful' });
     cookieStore.set({
       name: 'session_token',
       value: token,

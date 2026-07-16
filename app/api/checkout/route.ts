@@ -6,6 +6,7 @@ import Product from '@/lib/models/Product';
 import Order from '@/lib/models/Order';
 import Coupon from '@/lib/models/Coupon';
 import { verifyToken } from '@/lib/jwt';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 async function getUserId() {
   const cookieStore = await cookies();
@@ -113,6 +114,24 @@ export async function POST(request: Request) {
       address: addressStr,
       purchaseDate: new Date(),
     });
+
+    // Build order details for email
+    const emailOrderDetails = {
+      orderId: newOrder.orderId,
+      totalAmount: finalAmount,
+      paymentMethod,
+      orderItems: orderItemsList.map((item, i) => {
+         const prod = user.cart[i].product_id;
+         return {
+           productName: prod.productName,
+           quantity: item.quantity,
+           price: prod.price,
+         };
+      }),
+    };
+
+    // Send Order Confirmation Email asynchronously
+    sendOrderConfirmationEmail(user.email, user.name, emailOrderDetails).catch(console.error);
 
     // Clear cart and save user
     user.cart = [];
